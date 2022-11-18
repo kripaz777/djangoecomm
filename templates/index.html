@@ -31,18 +31,24 @@
                     </div>
                     <div class="col-md-3">
                         <div class="header-img">
+                            {% for ad in ads %}
+                            {% if ad.rank == 1 %}
                             <div class="img-item">
-                                <img src="img/category-1.jpg" />
+                                <img src="{{ad.image.url}}" />
                                 <a class="img-text" href="">
-                                    <p>Some text goes here that describes the image</p>
+                                    <p>{{ad.description}}</p>
                                 </a>
                             </div>
+                            {% endif %}
+                            {% if ad.rank == 2 %}
                             <div class="img-item">
-                                <img src="img/category-2.jpg" />
+                                <img src="{{ad.image.url}}" />
                                 <a class="img-text" href="">
-                                    <p>Some text goes here that describes the image</p>
+                                    <p>{{ad.description}}</p>
                                 </a>
                             </div>
+                            {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -54,12 +60,9 @@
         <div class="brand">
             <div class="container-fluid">
                 <div class="brand-slider">
-                    <div class="brand-item"><img src="img/brand-1.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-2.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-3.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-4.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-5.png" alt=""></div>
-                    <div class="brand-item"><img src="img/brand-6.png" alt=""></div>
+                    {% for brand in brands %}
+                    <div class="brand-item"><img src="{{brand.image.url}}" alt=""></div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -114,50 +117,65 @@
         <div class="category">
             <div class="container-fluid">
                 <div class="row">
+                    {% for ad in ads %}
                     <div class="col-md-3">
+                        {% if ad.rank == 3 %}
                         <div class="category-item ch-400">
-                            <img src="img/category-3.jpg" />
+                            <img src="{{ad.image.url}}" />
                             <a class="category-name" href="">
-                                <p>Some text goes here that describes the image</p>
+                                <p>{{ad.description}}</p>
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-3">
+                        {% if ad.rank == 4 %}
                         <div class="category-item ch-250">
-                            <img src="img/category-4.jpg" />
+                            <img src="{{ad.image.url}}" />
                             <a class="category-name" href="">
-                                <p>Some text goes here that describes the image</p>
+                                <p>{{ad.description}}</p>
                             </a>
                         </div>
+                        {% endif %}
+                        {% if ad.rank == 5 %}
                         <div class="category-item ch-150">
-                            <img src="img/category-5.jpg" />
+                            <img src="{{ad.image.url}}" />
                             <a class="category-name" href="">
-                                <p>Some text goes here that describes the image</p>
+                                <p>{{ad.description}}</p>
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-3">
+                        {% if ad.rank == 6 %}
                         <div class="category-item ch-150">
-                            <img src="img/category-6.jpg" />
+                            <img src="{{ad.image.url}}" />
                             <a class="category-name" href="">
-                                <p>Some text goes here that describes the image</p>
+                                <p>{{ad.description}}</p>
                             </a>
                         </div>
+                        {% endif %}
+                        {% if ad.rank == 7 %}
                         <div class="category-item ch-250">
-                            <img src="img/category-7.jpg" />
+                            <img src="{{ad.image.url}}" />
                             <a class="category-name" href="">
-                                <p>Some text goes here that describes the image</p>
+                                <p>{{ad.description}}</p>
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-3">
+                        {% if ad.rank == 8 %}
                         <div class="category-item ch-400">
-                            <img src="img/category-8.jpg" />
+                            <img src="{{add.image.url}}" />
                             <a class="category-name" href="">
-                                <p>Some text goes here that describes the image</p>
+                                <p>{{ad.description}}</p>
                             </a>
                         </div>
+                        {% endif %}
                     </div>
+                    {% endfor %}
+
                 </div>
             </div>
         </div>
