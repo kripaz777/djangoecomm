@@ -23,3 +23,10 @@ class CategoryView(BaseView):
         ids = Category.objects.get(slug = slug).id
         self.views['catproducts'] = Product.objects.filter(category_id = ids)
         return render(request, 'category.html', self.views)
+class ProductDetailView(BaseView):
+    def get(self,request,slug):
+        self.views
+        self.views['productdetails'] = Product.objects.filter(slug = slug)
+        subcat_ids =Product.objects.get(slug = slug).subcategory_id
+        self.views['related_products'] = Product.objects.filter(subcategory_id=subcat_ids)
+        return render(request, 'product-detail.html', self.views)
