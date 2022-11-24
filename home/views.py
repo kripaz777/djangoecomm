@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import *
 from django.views.generic import View
+import datetime
 # Create your views here.
 class BaseView(View):
     views = {}
@@ -30,3 +31,24 @@ class ProductDetailView(BaseView):
         subcat_ids =Product.objects.get(slug = slug).subcategory_id
         self.views['related_products'] = Product.objects.filter(subcategory_id=subcat_ids)
         return render(request, 'product-detail.html', self.views)
+
+def product_review(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        slug = request.POST['slug']
+        review = request.POST['review']
+        star = request.POST['star']
+        x = datetime.datetime.now()
+        date = x.strftime("%c")
+
+        data = ProductReview.objects.create(
+            name = name,
+            email = email,
+            slug = slug,
+            review = review,
+            star = star,
+            date = date
+        )
+        data.save()
+        return redirect(f'/product_details/{slug}')
