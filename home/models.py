@@ -81,7 +81,7 @@ class Cart(models.Model):
     items = models.ForeignKey(Product,on_delete=models.CASCADE)
     quantity = models.IntegerField()
     total = models.IntegerField()
-    date = models.DateTimeField(auto_created=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.username

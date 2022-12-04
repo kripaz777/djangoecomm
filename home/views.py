@@ -94,23 +94,28 @@ def signup(request):
 
     return render(request,'signup.html')
 
+class CartView(BaseView):
+    def get(self,request):
+        username = request.user.username
+        self.views['view_cart'] = Cart.objects.filter(username = username)
+        return render(request,'cart.html',self.views)
 def cart(request,slug):
     if Product.objects.filter(slug=slug).exists():
         username = request.user.username
         if Cart.objects.filter(slug = slug,username = username).exists():
             quantity = Cart.objects.get(slug = slug).quantity
-            price = Cart.objects.get(slug = slug).price
-            discounted_price = Cart.objects.get(slug=slug).discounted_price
+            price = Product.objects.get(slug = slug).price
+            discounted_price = Product.objects.get(slug=slug).discounted_price
             quantity = quantity +1
             if discounted_price > 0:
                 total = discounted_price*quantity
             else:
                 total = price*quantity
-            Cart.objects.get(slug=slug,username = username).update(quantity = quantity,total = total)
-            return redirect('/')
+            Cart.objects.filter(slug=slug,username = username).update(quantity = quantity,total = total)
+            return redirect('/cart')
         else:
-            price = Cart.objects.get(slug=slug).price
-            discounted_price = Cart.objects.get(slug=slug).discounted_price
+            price = Product.objects.get(slug=slug).price
+            discounted_price = Product.objects.get(slug=slug).discounted_price
             if discounted_price > 0:
                 total = discounted_price
             else:
@@ -123,29 +128,55 @@ def cart(request,slug):
                 items = Product.objects.get(slug=slug)
             )
             data.save()
-            return redirect('/')
+            return redirect('/cart')
 
 def delete_cart(request,slug):
     username = request.user.username
     if Cart.objects.filter(slug=slug, username=username).exists():
         Cart.objects.filter(slug=slug, username=username).delete()
-        return redirect('/')
+        return redirect('/cart')
 
 def reduce_quantity(request,slug):
     if Product.objects.filter(slug=slug).exists():
         username = request.user.username
         if Cart.objects.filter(slug = slug,username = username).exists():
             quantity = Cart.objects.get(slug = slug).quantity
-            price = Cart.objects.get(slug = slug).price
-            discounted_price = Cart.objects.get(slug=slug).discounted_price
+            price = Product.objects.get(slug = slug).price
+            discounted_price = Product.objects.get(slug=slug).discounted_price
             if quantity > 1:
                 quantity = quantity - 1
                 if discounted_price > 0:
                     total = discounted_price*quantity
                 else:
                     total = price*quantity
-                Cart.objects.get(slug=slug,username = username).update(quantity = quantity,total = total)
-                return redirect('/')
+                Cart.objects.filter(slug=slug,username = username).update(quantity = quantity,total = total)
+                return redirect('/cart')
             else:
                 messages.error(request, 'The quantity of the product is already 1.')
-                return redirect('/')
+                return redirect('/cart')
+
+
+
+# ----------------------------------------------API------------------------------------------------------------
+# ViewSets define the view behavior.
+from .serializers import *
+from rest_framework import viewsets
+from rest_framework import filters
+from rest_framework import generics
+
+from django_filters.rest_framework import DjangoFilterBackend
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+class ProductList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filterset_fields = ['category','subcategory', 'stock','labels','brand']
+    ordering_fields = ['id','price','name']
+    search_fields = ['name','description','specification']
+
+
